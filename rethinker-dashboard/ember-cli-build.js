@@ -8,7 +8,15 @@ module.exports = function(defaults) {
 
 
   app.import("bower_components/leaflet/dist/leaflet.js");
+  app.import({
+    development: "bower_components/bootstrap/dist/css/bootstrap-theme.css",
+    production: "bower_components/bootstrap/dist/css/bootstrap-theme.min.css"
+  })
 
+  app.import({
+    development: "bower_components/bootstrap/dist/js/bootstrap.js",
+    production: "bower_components/bootstrap/dist/js/boostrap.min.js",
+  })
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //
