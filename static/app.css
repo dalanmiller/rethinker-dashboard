@@ -1,0 +1,16 @@
+#map {
+  height: 600px;
+  width: auto;
+}
+
+body {
+  padding: 1em;
+}
+
+nav {
+  margin: 1em 0;
+}
+
+nav .active {
+  font-weight: bold;
+}

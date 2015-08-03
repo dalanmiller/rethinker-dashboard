@@ -1,195 +1,127 @@
-// An example TodoMVC app created by
-// [Tom Dale](http://github.com/tomdale) and
-// [Addy Osmany](http://github.com/addyosmani)
 
-// ember.js application
 
-// window.Todos = Ember.Application.create();
-window.ContribMap = Ember.Application.create();
+ContribMap = Ember.Application.create();
 
-// ember.js routes
-// Todos.Router.map(function() {
-//   this.resource('todos', { path: '/' }, function() {
-//     this.route('active');
-//     this.route('completed');
-//   });
-// });
 ContribMap.Router.map(function(){
-  this.resource("map", {path: "/"});
+  this.resource('map', { path: '/' });
+  this.resource('users');
+  this.resource("user", { path: ":user_id"})
+});
+
+ContribMap.MapController = Ember.Controller.extend({
+  latitude: 0,
+  longitude: 0,
+  zoom: 1
+});
+
+ContribMap.Users = DS.Model.extend({
+  login: DS.attr('string'),
+  coords: DS.attr('string'),
+});
+
+// App.PostAdapter = DS.RESTAdapter.extend({
+//   namespace: 'api/v1'
+// });
+
+ContribMap.UserAdapter = DS.RESTAdapter.extend({
+  namespace: "api"
 })
 
-// Todos.TodosRoute = Ember.Route.extend({
-//   model: function() {
-//     return Todos.Todo.find();
-//   }
-// });
-// ContribMap.MapRoute = Ember.Route.extend({
-//   model: function() {
-//     return Map.find();
-//   }
-// })
+ContribMap.UsersAdapter = DS.RESTAdapter.extend({
+  namespace: "api"
+})
 
-// Todos.TodosIndexRoute = Ember.Route.extend({
-//   setupController: function() {
-//     var todos = Todos.Todo.find();
-//     this.controllerFor('todos').set('filteredTodos', todos);
-//   }
-// });
 
-ContribMap.MapIndexRoute = Ember.Route.extend({
-  setupController: function() {
-    var map = Map.find();
-    // this.controllerFor("map").set("")
+ContribMap.UsersRoute = Ember.Route.extend({
+  model: function() {
+    return this.store.find('users');
+  }
+});
+
+ContribMap.UserRoute = Ember.Route.extend({
+  model: function(params){
+    return this.store.find("users", params.post_id);
   }
 })
 
-
-// Todos.TodosActiveRoute = Ember.Route.extend({
-//   setupController: function() {
-//     var todos = Todos.Todo.filter(function(todo) {
-//       if (!todo.get('isCompleted')) { return true; }
-//     });
-//
-//     this.controllerFor('todos').set('filteredTodos', todos);
-//   }
-// });
-
-// Todos.TodosCompletedRoute = Ember.Route.extend({
-//   setupController: function() {
-//     var todos = Todos.Todo.filter(function(todo) {
-//       if (todo.get('isCompleted')) { return true; }
-//     });
-//
-//     this.controllerFor('todos').set('filteredTodos', todos);
-//   }
-// });
-
-// ember.js store: DS.RESTAdapter
-// Todos.Store = DS.Store.extend({
-//   revision: 11,
-//   adapter: 'DS.RESTAdapter'
-// });
-
-
-// ember.js models
-ContribMap.Map = DS.Model.extend({
-  // title: DS.attr('string'),
-  // isCompleted: DS.attr('boolean'),
-
-  // todoDidChange: function() {
-  //   Ember.run.once(this, function() {
-  //     this.get('store').commit();
-  //   });
-  // }.observes('isCompleted', 'title')
+ContribMap.MapRoute = Ember.Route.extend({
+  model: function(){
+    return this.store.findAll("users");
+  },
+  setupController: function() {
+    console.log("INDEXROUTE SETUPCONTROLLER");
+    // var users = ContribMap.User.find();
+    var users = [];
+    this.controllerFor('map').set('users', users);
+  }
 });
 
-// ember.js controllers
+ContribMap.LeafletMapComponent = Ember.Component.extend({
+  attributeBindings: ['style'],
 
-// Todos.TodosController = Ember.ArrayController.extend({
-//   createTodo: function() {
-//     // Get the todo title set by the "New Todo" text field
-//     var title = this.get('newTitle');
-//     if (!title.trim()) { return; }
-//
-//     // Create the new Todo model
-//     Todos.Todo.createRecord({
-//       title: title,
-//       isCompleted: false
-//     });
-//
-//     // Clear the "New Todo" text field
-//     this.set('newTitle', '');
-//
-//     // Save the new model
-//     this.get('store').commit();
-//   },
-//
-//   clearCompleted: function() {
-//     var completed = this.filterProperty('isCompleted', true);
-//     completed.invoke('deleteRecord');
-//
-//     this.get('store').commit();
-//   },
-//
-//   remaining: function() {
-//     return this.filterProperty( 'isCompleted', false ).get( 'length' );
-//   }.property( '@each.isCompleted' ),
-//
-//   remainingFormatted: function() {
-//     var remaining = this.get('remaining');
-//     var plural = remaining === 1 ? 'item' : 'items';
-//     return '<strong>%@</strong> %@ left'.fmt(remaining, plural);
-//   }.property('remaining'),
-//
-//   completed: function() {
-//     return this.filterProperty('isCompleted', true).get('length');
-//   }.property('@each.isCompleted'),
-//
-//   hasCompleted: function() {
-//     return this.get('completed') > 0;
-//   }.property('completed'),
-//
-//   allAreDone: function( key, value ) {
-//     if ( value !== undefined ) {
-//       this.setEach( 'isCompleted', value );
-//       return value;
-//     } else {
-//       return !!this.get( 'length' ) &&
-//         this.everyProperty( 'isCompleted', true );
-//     }
-//   }.property( '@each.isCompleted' )
-// });
-//
-// Todos.TodoController = Ember.ObjectController.extend({
-//   isEditing: false,
-//
-//   editTodo: function() {
-//     this.set('isEditing', true);
-//   },
-//
-//   removeTodo: function() {
-//     var todo = this.get('model');
-//
-//     todo.deleteRecord();
-//     todo.get('store').commit();
-//   }
-// });
+  width: 'auto',
+  height: '600px',
+  latitude: 0,
+  longitude: 0,
+  zoom: 1,
 
-// ember.js views
+  style: function() {
+    console.log("STYLE");
+    console.log(this);
+    return [
+      'width:' + this.get('width'),
+      'height:' + this.get('height')
+    ].join(';');
+  }.property('width', 'height'),
 
-// todo view
-ContribMap.MapView = Ember.View.extend({
-  tagName: 'div#map',
-  // classNameBindings: ['todo.isCompleted:completed', 'isEditing:editing'],
+  setView: function() {
+    var map    = this.get('map'),
+  			center = [this.get('latitude'), this.get('longitude')],
+				zoom   = this.get('zoom');
 
-  // doubleClick: function(event) {
-  //   this.set('isEditing', true);
-  // }
+		map.setView(center, zoom);
+  }.observes('latitude', 'longitude', 'zoom'),
+
+  didInsertElement: function() {
+    var map = L.map(this.get('element'));
+
+    var users = this.get("users");
+
+    console.log("users");
+    console.log(users);
+
+    console.log(this.model);
+
+    this.set('map', map);
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      maxZoom: 18,
+      id: 'dalanmiller.008a9358',
+      accessToken: "pk.eyJ1IjoiZGFsYW5taWxsZXIiLCJhIjoiZDg0MWY0MjMzZjE4Y2VkOGE4NGY1ZTI5ZTg5MjUzMTMifQ.ylhul8dwba3XpBQDOkTK6w"
+    }).addTo(map);
+
+    this.setView();
+
+    map.on('move', this.mapDidMove, this);
+
+    map.invalidateSize();
+  },
+
+  // willRemoveElement: function() {
+  //   var map = this.get('map');
+  //   if (map) map.remove();
+  // },
+  //
+  mapDidMove: function() {
+    var map    = this.get('map'),
+        center = map.getCenter(),
+        zoom   = map.getZoom();
+
+    this.setProperties({
+      latitude: center.lat,
+      longitude: center.lng,
+      zoom: zoom
+    });
+  }
 });
-
-// edit todo view
-// Todos.EditTodoView = Ember.TextField.extend({
-//   classNames: ['edit'],
-//
-//   valueBinding: 'todo.title',
-//
-//   change: function() {
-//     var value = this.get('value');
-//
-//     if (Ember.isEmpty(value)) {
-//       this.get('controller').removeTodo();
-//     }
-//   },
-//
-//   focusOut: function() {
-//     this.set('controller.isEditing', false);
-//   },
-//
-//   insertNewline: function() {
-//     this.set('controller.isEditing', false);
-//   },
-//
-//   didInsertElement: function() {
-//     this.$().focus();
-//   }
-// });
