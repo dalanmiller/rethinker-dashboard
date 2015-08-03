@@ -2,7 +2,11 @@ from __future__ import print_function, unicode_literals
 from flask import Flask, make_response
 import rethinkdb as r
 import json
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="/static")
+
+@app.route("/")
+def root():
+    return app.send_static_file('index.html')
 
 @app.route("/users")
 @app.route('/users/<user_id>')
