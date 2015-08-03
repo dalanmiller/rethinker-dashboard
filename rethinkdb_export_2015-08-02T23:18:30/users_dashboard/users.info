@@ -1,0 +1,1 @@
+{"type": "TABLE", "name": "users", "indexes": [], "db": {"id": "a4074fcc-1e49-4027-80aa-d085d0f54fe5", "type": "DB", "name": "users_dashboard"}, "id": "52f8c7b1-6093-47eb-9047-dd47f985ce96", "primary_key": "id", "doc_count_estimates": [10625]}
