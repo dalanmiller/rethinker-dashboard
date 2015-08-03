@@ -25,40 +25,13 @@
   <h1>Welcome to better shit, maybe</h1>
 
 
-  <script type="text/x-handlebars" data-template-name="application">
-    <h2>APPLICATION</h2>
-    {{outlet}}
-  </script>
-  <script type="text/x-handlebars" data-template-name="users">
-    <h2>Users</h2>
-    {{#each user in users}}
-      {{user.login}}
-      {{user.coords}}
-    {{/each}}
+  
 
+  <script type="text/x-handlebars" data-teplate-name="users">
+    <h1>Hello Ember</h1>
+    <div id="map"></div>
   </script>
-  <script type="text/x-handlebars" data-template-name="user">
-    <h2>User</h2>
 
-      {{user.login}}
-      {{user.coords}}
-    
-
-  </script>
-  <script type="text/x-handlebars" data-template-name="map">
-    <p class="controls">
-      Lat: {{input value=latitude size=8}}
-      Lon: {{input value=longitude size=8}}
-      Zoom: {{input value=zoom size=1}}
-    </p>
-    {{leaflet-map width="auto"
-    height="600px"
-    latitude=latitude
-    longitude=longitude
-    zoom=zoom}}
-  </script>
-  <script type="text/x-handlebars" id="components/leaflet-map">
-  </script>
   <script src="/static/map.js"></script>
 </body>
 </html>
